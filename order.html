@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Rankings | Wishlist</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #faf8f5;
+  --text: #292523;
+  --accent: #9a675d;
+  --muted: #817b76;
+  --border: #e5ded8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* NAVIGATION */
+
+.site-nav {
+  padding: 22px 6%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.nav-links {
+  display: flex;
+  gap: 30px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* PAGE HEADER */
+
+header {
+  text-align: center;
+  padding: 65px 20px 55px;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: clamp(44px, 7vw, 72px);
+  margin: 12px 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* RANKING LIST */
+
+main {
+  max-width: 1000px;
+  padding: 0 24px 90px;
+  margin: auto;
+}
+
+.list-heading {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 65px 105px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 25px;
+  padding: 18px 10px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+
+.ranking-row:hover {
+  background: #f2eeea;
+}
+
+/* RANK NUMBER */
+
+.rank-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  color: #b9a9a0;
+  font-weight: 500;
+  text-align: center;
+}
+
+.ranking-row:nth-child(1) .rank-number,
+.ranking-row:nth-child(2) .rank-number,
+.ranking-row:nth-child(3) .rank-number {
+  color: var(--accent);
+}
+
+/* IMAGE */
+
+.rank-image {
+  width: 105px;
+  height: 105px;
+  background: #eee8e2;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.rank-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 7px;
+}
+
+.fallback {
+  font-size: 35px;
+}
+
+/* PRODUCT INFORMATION */
+
+.rank-info {
+  min-width: 0;
+}
+
+.rank-category {
+  color: var(--accent);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.rank-name {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 7px 0;
+  line-height: 1.4;
+}
+
+.rank-note {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* SHOP LINK */
+
+.rank-link {
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 11px 18px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: 0.2s;
+}
+
+.rank-link:hover {
+  background: var(--text);
+  color: white;
+}
+
+/* FOOTER */
+
+footer {
+  text-align: center;
+  padding: 30px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* MOBILE */
+
+@media(max-width: 650px) {
+  .site-nav {
+    padding: 18px 15px;
+    gap: 12px;
+  }
+
+  .nav-logo {
+    font-size: 13px;
+  }
+
+  .nav-links {
+    gap: 14px;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+  }
+
+  main {
+    padding: 0 12px 60px;
+  }
+
+  .ranking-row {
+    grid-template-columns: 32px 70px minmax(0, 1fr);
+    gap: 12px;
+    padding: 14px 3px;
+  }
+
+  .rank-number {
+    font-size: 23px;
+  }
+
+  .rank-image {
+    width: 70px;
+    height: 70px;
+  }
+
+  .rank-name {
+    font-size: 13px;
+  }
+
+  .rank-category {
+    font-size: 9px;
+  }
+
+  .rank-link {
+    grid-column: 3;
+    justify-self: start;
+    padding: 7px 12px;
+    font-size: 10px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">MY WISHLIST</a>
+  <div class="nav-links">
+    <a href="index.html">All Gifts</a>
+    <a href="order.html" class="active">My Rankings</a>
+  </div>
+</nav>
+
+<header>
+  <h1>My Rankings</h1>
+</header>
+
+<main>
+  <div class="list-heading">
+    <span>Ranked Wishlist</span>
+    <span id="itemCount"></span>
+  </div>
+
+  <div id="rankingList"></div>
+</main>
+
+<footer>Made with ♡ · My Wishlist</footer>
+
+<script>
+
+// =====================================
+// GIFTS IN RANKED ORDER
+// The first gift is #1.
+// Move a line up or down to change its rank.
+// Format: [name, category, note, image, link]
+// =====================================
+
+const gifts = [
+  ["UGA x Outkast So Fresh So Clean Hoodie","Clothing","Size Large · Limited release","2.png","https://classtrip.co/products/nike-x-class-trip-x-uga-x-outkast-so-fresh-so-clean-hoodie"],
+  ["Canon RF 200-800mm Lens","Camera Equipment","f/6.3-9 IS USM lens bundle","36.png","https://www.amazon.com/dp/B0FKCSWFD2/"],
+  ["Nike Studio Fleece Oversized Hoodie","Clothing","Size Large","5.png","https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-pullover-hoodie-BwJZvN7w/IX7043-001"],
+  ["Aerie Street Trouser - Cheetah","Clothing","Size Large","6.png","https://www.ae.com/us/en/p/aerie/bottoms/pants/aerie-street-trouser/0701_8490_128"],
+  ["Aerie Cloud Fleece Mockneck","Clothing","Size Large","9.png","https://www.ae.com/us/en/p/aerie/tops/sweatshirts-hoodies/offline-by-aerie-cloud-fleece-oversized-mockneck-sweatshirt/2164_2169_073"],
+  ["Aerie Real Me Trouser","Clothing","Size Large","10.png","https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-real-me-xtra-high-waisted-trouser/0784_1093_073"],
+  ["Aerie Hugger Wide Leg Pants","Clothing","Size Large","12.png","https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-the-hugger-piping-wide-leg-pant/0784_6307_073"],
+  ["Nike Studio Fleece Crew Neck","Clothing","Size Large","37.png","https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-crew-neck-sweatshirt-muNdPA4Z/IM8082-001"],
+  ["Nike Fleece Plush Pants","Clothing","Size Large","42.png","https://www.academy.com/p/nike-womens-fleece-plush-pants?sku=mystic-dates-sail-large"],
+  ["Nike Plush Cropped Quarter Zip","Clothing","Size Large","43.png","https://www.academy.com/p/nike-womens-plush-oversized-crop-quarter-zip-long-sleeve-fleece-sweatshirt?sku=mystic-dates-sail-large"],
+  ["Nike Studio Fleece Oversized Crew","Clothing","Size Large","39.png","https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-crew-SelEwfjI/IZ3874-259"],
+  ["Nike Studio Fleece Cuffed Pants","Clothing","Size Large","40.png","https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-high-rise-cuffed-pants-CX1DVLm0/IZ3889-259"],
+  ["SUUKSESS Matching Lounge Set","Clothing","Size X-Large","22.png","https://www.amazon.com/dp/B0HDBZFXFQ/"],
+  ["Alaroo Two-Piece Lounge Set","Clothing","Size Large","21.png","https://www.amazon.com/dp/B0HG9MFV24/"],
+  ["Nike Zenvy Wide Leg Pants","Clothing","Size Large","41.png","https://www.nike.com/t/zenvy-womens-mid-rise-wide-leg-pants-E7tmCcqD/IV4958-010"],
+  ["Aoxjox Women's Seamless Camo Leggings","Clothing","Size Large","62.png","https://www.amazon.com/gp/product/B0DRG77X56/"],
+  ["Womens Baggy Barrel Pants","Clothing","Size Large","63.png","https://www.amazon.com/gp/product/B0FR4464RY/"],
+  ["Zeadio Camera Video Rig Cage","Camera Equipment","Filmmaking kit","19.png","https://www.amazon.com/dp/B0CWCVC9QN/"],
+  ["HydroJug Traveler","Accessories","40 oz","4.png","https://www.target.com/p/hydrojug-40oz-traveler-straw-tumbler/-/A-1014533840?preselect=1011913063"],
+  ["Snakeskin Everyday Tumbler","Accessories","20 oz","3.png","https://shop.com/products/14973623796072/snakeskin-everyday-tumbler-20oz"],
+  ["Stanley Lunch Box","Accessories","White","46.png","https://www.amazon.com/dp/B0CZ5NZSKN/"],
+  ["K&F 77mm Starburst Filter Kit","Camera Equipment","4, 6 and 8-point filters","17.png","https://www.amazon.com/dp/B0D41HS9CV/"],
+  ["Meta AI Glasses","Technology","Scriber Optics (Gen 2)","45.png","https://www.meta.com/ai-glasses/ray-ban-meta-scriber-havana-clear-gen-2/"],
+  ["Camera Backpack","Camera Equipment","35L-45L","53.png","https://www.amazon.com/gp/product/B0BN5VZYT4/"],
+  ["DJI Osmo Mobile 8","Camera Equipment","Phone gimbal stabilizer","35.png","https://www.amazon.com/dp/B0GLPQCR51/"],
+  ["K&F 77mm UV Protection Filter","Camera Equipment","Nano-X series","18.png","https://www.amazon.com/dp/B09YH1G8SL/"],
+  ["Large Soft Leather Tote Bag","Accessories","With interior pouch","15.png","https://www.amazon.com/dp/B0GV3TWBYG/"],
+  ["Aerie Layered Leggings","Clothing","Size Large","11.png","https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-real-me-xtra-high-waisted-layered-legging/1701_6350_073"],
+  ["Aerie Street Trouser - Red","Clothing","Size Large","7.png","https://www.ae.com/us/en/p/aerie/bottoms/pants/aerie-street-trouser/0701_8540_572"],
+  ["Aerie Go-To Boyfriend Sweatshirt","Clothing","Size Large","8.png","https://www.ae.com/us/en/p/aerie/tops/sweatshirts-hoodies/aerie-go-to-boyfriend-sweatshirt/0743_4022_572"],
+  ["Sampeel Womens Long Sleeve Top","Clothing","Size Large","59.png","https://www.amazon.com/gp/product/B0GZBPY3NF/"],
+  ["Sampeel Womens Long Sleeve Top","Clothing","Size Large","60.png","https://www.amazon.com/gp/product/B0GZBPY3NF/"],
+  ["Nike Studio Fleece Red Crew","Clothing","Size Large","38.png","https://www.academy.com/p/nike-womens-studio-fleece-mid-weight-crew-sweatshirt?sku=bright-red-01-large"],
+  ["Coume Straight Leg Track Pants","Clothing","Size Large","31.png","https://www.amazon.com/dp/B0GL8CG1ZR/"],
+  ["Cropped Top and Wide Leg Lounge Set","Clothing","Size Large","33.png","https://www.amazon.com/dp/B0HFBBRRXK/"],
+  ["ZESICA Striped Lounge Set","Clothing","Size Large","34.png","https://www.amazon.com/dp/B0HJ2G3GQS/"],
+  ["Polka Dot Lounge Pants Sets","Clothing","Size Large","51.png","https://www.amazon.com/gp/product/B0HJZ4XV6D/"],
+  ["Sampeel Two Piece Set","Clothing","Size Large","58.png","https://www.amazon.com/gp/product/B0HKMCZBMP/"],
+  ["Womens Lightweight Cropped Puffer","Clothing","Size Medium","61.png","https://www.amazon.com/gp/product/B0CJRN91FY/"],
+  ["LaCie Rugged Portable Hard Drive","Technology","2TB USB-C","20.png","https://www.amazon.com/dp/B01N7QFZLQ/"],
+  ["Coutgo Knee High Boots","Shoes","Size 10","24.png","https://www.amazon.com/dp/B0H2HPD375/"],
+  ["Leather Slip-On Womens Clogs","Shoes","Size 10","16.png","https://www.amazon.com/gp/product/B0GWRR12MM/"],
+  ["HydroJug Traveler","Accessories","40 oz","52.png","https://www.amazon.com/gp/product/B0H2G7R7BR/"],
+  ["Gold Hoop Earrings","Accessories","Gold","44.png","https://www.amazon.com/dp/B0D172FC5V/"],
+  ["Chunky Statement Gold Hammered Bold Cross","Accessories","Cross and brown beads","54.png","https://www.amazon.com/gp/product/B0D872YBF4/"],
+  ["Tewiky Layered Necklaces","Accessories","Layered","55.png","https://www.amazon.com/gp/product/B0F2M4CNWH/"],
+  ["Chain Earrings","Accessories","Dots","56.png","https://www.amazon.com/gp/product/B08MSY5FXC/"],
+  ["Gold Bracelets","Accessories","","57.png","https://www.amazon.com/gp/product/B0C2P72WY6/"],
+  ["Retropia Disposable Camera Lens","Camera Equipment","Canon RF mount","13.png","https://www.amazon.com/dp/B0FFGMK77R/"],
+  ["DAE Cactus Fruit Styling Cream","Beauty","Styling cream and taming wand","25.png","https://www.amazon.com/dp/B0DTMFM1B8/"],
+  ["L'Occitane Hand Cream","Beauty","","26.png","https://www.amazon.com/dp/B09VB3PRBN/"],
+  ["Summer Fridays Lip Butter Balm Set","Beauty","Vanilla and Vanilla Beige","27.png","https://www.amazon.com/dp/B0FDX7CJQ5/"],
+  ["Caudalie Instant Detox Mask","Beauty","Pink clay face mask","28.png","https://www.amazon.com/dp/B0CZTXZYKN/"],
+  ["Lux Unfiltered Iced Latte Eye Patches","Beauty","10 pairs","29.png","https://www.amazon.com/dp/B0DPRGGPQS/"],
+  ["Hero Cosmetics Mighty Patch","Beauty","75 count","30.png","https://www.amazon.com/dp/B0DNR8RF83/"],
+  ["Kroger Gift Card","Gift Cards","Any amount","47.png","https://www.kroger.com/gift-cards"],
+  ["Target Gift Card","Gift Cards","Any amount","50.png","https://www.target.com/c/gift-cards/-/N-5xsxu"],
+  ["Walmart Gift Card","Gift Cards","Any amount","48.png","https://www.walmart.com/cp/gift-cards/96894"],
+  ["Visa Gift Card","Gift Cards","Any amount","49.png","https://www.vanillagift.com/"]
+];
+
+// =====================================
+// BUILD THE RANKING LIST
+// =====================================
+
+const rankingList = document.getElementById("rankingList");
+
+document.getElementById("itemCount").textContent =
+  gifts.length + " gifts";
+
+gifts.forEach((gift, index) => {
+
+  const [name, category, note, image, url] = gift;
+
+  const row = document.createElement("article");
+  row.className = "ranking-row";
+
+  // Ranking number
+  const number = document.createElement("div");
+  number.className = "rank-number";
+  number.textContent = String(index + 1).padStart(2, "0");
+
+  // Product image
+  const imageBox = document.createElement("div");
+  imageBox.className = "rank-image";
+
+  const img = document.createElement("img");
+  img.src = image;
+  img.alt = name;
+  img.loading = "lazy";
+
+  img.onerror = () => {
+    imageBox.textContent = "🎁";
+    imageBox.classList.add("fallback");
+  };
+
+  imageBox.appendChild(img);
+
+  // Product details
+  const info = document.createElement("div");
+  info.className = "rank-info";
+
+  const categoryText = document.createElement("div");
+  categoryText.className = "rank-category";
+  categoryText.textContent = category;
+
+  const nameText = document.createElement("div");
+  nameText.className = "rank-name";
+  nameText.textContent = name;
+
+  const noteText = document.createElement("div");
+  noteText.className = "rank-note";
+  noteText.textContent = note;
+
+  info.append(categoryText, nameText, noteText);
+
+  // Shopping link
+  const link = document.createElement("a");
+  link.className = "rank-link";
+  link.href = url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = "View Gift ↗";
+
+  row.append(number, imageBox, info, link);
+  rankingList.appendChild(row);
+
+});
+</script>
+
+</body>
+</html>
+
