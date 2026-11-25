@@ -1,1132 +1,755 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>My Wishlist</title>
-
-  <style>
-
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap');
-
-    /* =====================================
-       GENERAL STYLING
-    ===================================== */
-
-    :root {
-      --background: #faf8f5;
-      --text: #292523;
-      --accent: #9a675d;
-      --muted: #817b76;
-      --border: #e5ded8;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      background: var(--background);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-    }
-
-    /* =====================================
-       HEADER
-    ===================================== */
-
-    header {
-      text-align: center;
-      padding: 65px 20px 45px;
-    }
-
-    header .small {
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(45px, 7vw, 76px);
-      margin: 12px 0;
-      font-weight: 500;
-    }
-
-    header p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    /* =====================================
-       MAIN CONTENT
-    ===================================== */
-
-    main {
-      max-width: 1350px;
-      margin: auto;
-      padding: 0 25px 80px;
-    }
-
-    /* =====================================
-       CATEGORY FILTERS
-    ===================================== */
-
-    .toolbar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .filters {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .filter {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 30px;
-      padding: 11px 17px;
-      cursor: pointer;
-      font-family: inherit;
-      font-size: 12px;
-      transition: 0.2s;
-    }
-
-    .filter.active,
-    .filter:hover {
-      background: var(--text);
-      color: white;
-    }
-
-    .count {
-      color: var(--muted);
-      font-size: 12px;
-      margin-bottom: 20px;
-    }
-
-    /* =====================================
-       PRODUCT GRID
-    ===================================== */
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 32px 20px;
-    }
-
-    .item {
-      min-width: 0;
-    }
-
-    /* =====================================
-       PRODUCT SQUARES
-    ===================================== */
-
-    .square {
-      width: 100%;
-      aspect-ratio: 1;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      position: relative;
-      overflow: hidden;
-      transition: 0.25s;
-      color: var(--text);
-      padding: 0;
-    }
-
-    .square:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 30px #00000015;
-    }
-
-    /* =====================================
-       PRODUCT IMAGES
-    ===================================== */
-
-    .product-image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      padding: 12px;
-      transition: transform 0.3s ease;
-    }
-
-    .square:hover .product-image {
-      transform: scale(1.05);
-    }
-
-    .symbol {
-      font-size: 65px;
-    }
-
-    .square-label {
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    /* =====================================
-       PRODUCT INFORMATION
-    ===================================== */
-
-    .info {
-      padding: 13px 2px;
-    }
-
-    .category {
-      text-transform: uppercase;
-      color: var(--accent);
-      letter-spacing: 1.5px;
-      font-size: 10px;
-      font-weight: 700;
-    }
-
-    .name {
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.5;
-      margin: 7px 0;
-    }
-
-    .note {
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 9px;
-    }
-
-    .shop {
-      display: inline-block;
-      color: var(--text);
-      font-size: 12px;
-      text-decoration: underline;
-      text-underline-offset: 4px;
-      overflow-wrap: anywhere;
-    }
-
-    .shop:hover {
-      color: var(--accent);
-    }
-
-    /* =====================================
-       PRODUCT POPUP
-    ===================================== */
-
-    dialog {
-      border: none;
-      border-radius: 12px;
-      padding: 35px;
-      max-width: 500px;
-      width: calc(100% - 30px);
-      box-shadow: 0 20px 80px #0004;
-    }
-
-    dialog::backdrop {
-      background: #201c1bb3;
-    }
-
-    .close {
-      float: right;
-      border: none;
-      background: transparent;
-      font-size: 26px;
-      cursor: pointer;
-    }
-
-    .modal-image {
-      display: block;
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      margin: 15px auto;
-    }
-
-    .modal-icon {
-      font-size: 65px;
-    }
-
-    dialog h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 30px;
-      font-weight: 500;
-    }
-
-    dialog p {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .modal-link {
-      display: inline-block;
-      background: var(--text);
-      color: white;
-      padding: 14px 20px;
-      text-decoration: none;
-      border-radius: 5px;
-      margin-top: 15px;
-    }
-
-    .modal-link:hover {
-      background: var(--accent);
-    }
-
-    /* =====================================
-       EMPTY RESULTS
-    ===================================== */
-
-    .empty {
-      text-align: center;
-      color: var(--muted);
-      padding: 50px;
-      grid-column: 1 / -1;
-    }
-
-    /* =====================================
-       FOOTER
-    ===================================== */
-
-    footer {
-      text-align: center;
-      padding: 30px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* =====================================
-       RESPONSIVE DESIGN
-    ===================================== */
-
-    @media (max-width: 900px) {
-
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-    }
-
-    @media (max-width: 600px) {
-
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 25px 12px;
-      }
-
-      main {
-        padding: 0 15px 50px;
-      }
-
-      .symbol {
-        font-size: 45px;
-      }
-
-      .name {
-        font-size: 12px;
-      }
-
-    }
-
-  </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Wishlist</title>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #faf8f5;
+  --text: #292523;
+  --accent: #9a675d;
+  --muted: #817b76;
+  --border: #e5ded8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+}
+
+/* NAVIGATION */
+
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 6%;
+  border-bottom: 1px solid var(--border);
+  gap: 15px;
+}
+
+.nav-logo {
+  font-family: "Playfair Display", serif;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--muted);
+  padding-bottom: 7px;
+  border-bottom: 2px solid transparent;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* HEADER */
+
+header {
+  text-align: center;
+  padding: 65px 20px 45px;
+}
+
+h1 {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(45px, 7vw, 76px);
+  font-weight: 500;
+  margin: 12px 0;
+}
+
+/* MAIN */
+
+main {
+  max-width: 1350px;
+  margin: auto;
+  padding: 0 25px 80px;
+}
+
+/* FILTERS */
+
+.toolbar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 11px 17px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+.filter:hover,
+.filter.active {
+  background: var(--text);
+  color: white;
+}
+
+.count {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+/* PRODUCT GRID */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px 20px;
+}
+
+.item {
+  min-width: 0;
+}
+
+.square {
+  width: 100%;
+  aspect-ratio: 1;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: 0.25s;
+  padding: 0;
+}
+
+.square:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px #00000015;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+  transition: transform 0.3s ease;
+}
+
+.square:hover .product-image {
+  transform: scale(1.05);
+}
+
+.symbol {
+  font-size: 65px;
+}
+
+/* PRODUCT INFORMATION */
+
+.info {
+  padding: 13px 2px;
+}
+
+.category {
+  text-transform: uppercase;
+  color: var(--accent);
+  letter-spacing: 1.5px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 7px 0;
+}
+
+.note {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 9px;
+}
+
+.shop {
+  display: inline-block;
+  color: var(--text);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  overflow-wrap: anywhere;
+}
+
+.shop:hover {
+  color: var(--accent);
+}
+
+/* PRODUCT POPUP */
+
+dialog {
+  border: none;
+  border-radius: 12px;
+  padding: 35px;
+  max-width: 500px;
+  width: calc(100% - 30px);
+  box-shadow: 0 20px 80px #0004;
+}
+
+dialog::backdrop {
+  background: #201c1bb3;
+}
+
+.close {
+  float: right;
+  border: none;
+  background: transparent;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.modal-image {
+  display: block;
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  margin: 15px auto;
+}
+
+.modal-icon {
+  font-size: 65px;
+}
+
+dialog h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 30px;
+  font-weight: 500;
+}
+
+dialog p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.modal-link {
+  display: inline-block;
+  background: var(--text);
+  color: white;
+  padding: 14px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+.modal-link:hover {
+  background: var(--accent);
+}
+
+.empty {
+  text-align: center;
+  color: var(--muted);
+  padding: 50px;
+  grid-column: 1 / -1;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .site-nav {
+    padding: 18px 15px;
+  }
+
+  .nav-logo {
+    font-size: 13px;
+  }
+
+  .nav-links {
+    gap: 14px;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px 12px;
+  }
+
+  main {
+    padding: 0 15px 50px;
+  }
+
+  .name {
+    font-size: 12px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- =====================================
-       HEADER
-  ===================================== -->
+<!-- NAVIGATION -->
 
-  <header>
+<nav class="site-nav">
+  <a href="index.html" class="nav-logo">MY WISHLIST ♡</a>
 
-    <h1>Wishlist</h1>
+  <div class="nav-links">
+    <a href="index.html" class="active">All Gifts</a>
+    <a href="order.html">My Rankings</a>
+  </div>
+</nav>
 
-  </header>
+<!-- HEADER -->
 
-  <!-- =====================================
-       MAIN CONTENT
-  ===================================== -->
+<header>
+  <h1>Wishlist</h1>
+</header>
 
-  <main>
+<!-- PRODUCTS -->
 
-    <div class="toolbar">
-      <div class="filters" id="filters"></div>
-    </div>
+<main>
+  <div class="toolbar">
+    <div class="filters" id="filters"></div>
+  </div>
 
-    <div class="count" id="count"></div>
-
-    <div class="grid" id="grid"></div>
-
-  </main>
-
-  <!-- =====================================
-       PRODUCT POPUP
-  ===================================== -->
-
-  <dialog id="details">
-
-    <button
-      class="close"
-      id="closeModal"
-      aria-label="Close product details"
-    >
-      ×
-    </button>
-
-    <div id="modal"></div>
-
-  </dialog>
-
-  <!-- =====================================
-       FOOTER
-  ===================================== -->
-
-  <footer>
-    Made with ♡ · My Wishlist
-  </footer>
-
-  <!-- =====================================
-       JAVASCRIPT
-  ===================================== -->
-
-  <script>
-
-    // =====================================
-    // AMAZON WISHLIST LINK
-    // =====================================
-
-    const amazon =
-      "https://www.amazon.com/hz/wishlist/ls/3C9AOAMHHSORP";
-
-
-    // =====================================
-    // ALL PRODUCTS ORGANIZED BY CATEGORY
-    // =====================================
-
-    const products = [
-
-      // =====================================
-      // CLOTHING
-      // =====================================
-
-      {
-        name: "Nike Club Fleece Washed Hoodie",
-        category: "Clothing",
-        url: "https://www.dickssportinggoods.com/p/nike-mens-club-fleece-washed-hoodie-25nikmcasumclbbbhdeaa/25nikmcasumclbbbhdeaa",
-        note: "Size Large",
-        image: "1.png"
-      },
-
-      {
-        name: "UGA x Outkast So Fresh So Clean Hoodie",
-        category: "Clothing",
-        url: "https://classtrip.co/products/nike-x-class-trip-x-uga-x-outkast-so-fresh-so-clean-hoodie",
-        note: "Size Large · Limited release",
-        image: "2.png"
-      },
-
-      {
-        name: "Nike Studio Fleece Oversized Hoodie",
-        category: "Clothing",
-        url: "https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-pullover-hoodie-BwJZvN7w/IX7043-001",
-        note: "Size Large",
-        image: "5.png"
-      },
-
-      {
-        name: "Aerie Street Trouser - Style 1",
-        category: "Clothing",
-        url: "https://www.ae.com/us/en/p/aerie/bottoms/pants/aerie-street-trouser/0701_8490_128",
-        note: "Size Large",
-        image: "6.png"
-      },
-
-      {
-        name: "Aerie Street Trouser - Style 2",
-        category: "Clothing",
-        url: "https://www.ae.com/us/en/p/aerie/bottoms/pants/aerie-street-trouser/0701_8540_572",
-        note: "",
-        image: "7.png"
-      },
-
-      {
-        name: "Aerie Go-To Boyfriend Sweatshirt",
-        category: "Clothing",
-        url: "https://www.ae.com/us/en/p/aerie/tops/sweatshirts-hoodies/aerie-go-to-boyfriend-sweatshirt/0743_4022_572",
-        note: "",
-        image: "8.png"
-      },
-
-      {
-        name: "Aerie Cloud Fleece Mockneck",
-        category: "Clothing",
-        url: "https://www.ae.com/us/en/p/aerie/tops/sweatshirts-hoodies/offline-by-aerie-cloud-fleece-oversized-mockneck-sweatshirt/2164_2169_073",
-        note: "",
-        image: "9.png"
-      },
-
-      {
-        name: "Aerie Real Me Trouser",
-        category: "Clothing",
-        url: "https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-real-me-xtra-high-waisted-trouser/0784_1093_073",
-        note: "",
-        image: "10.png"
-      },
-
-      {
-        name: "Aerie Layered Leggings",
-        category: "Clothing",
-        url: "https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-real-me-xtra-high-waisted-layered-legging/1701_6350_073",
-        note: "",
-        image: "11.png"
-      },
-
-      {
-        name: "Aerie Hugger Wide Leg Pants",
-        category: "Clothing",
-        url: "https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-the-hugger-piping-wide-leg-pant/0784_6307_073",
-        note: "",
-        image: "12.png"
-      },
-
-      {
-        name: "Alaroo Two-Piece Lounge Set",
-        category: "Clothing",
-        url: amazon,
-        note: "Zip-up top and pants",
-        image: "21.png"
-      },
-
-      {
-        name: "SUUKSESS Matching Lounge Set",
-        category: "Clothing",
-        url: amazon,
-        note: "Mock neck and wide-leg pants",
-        image: "22.png"
-      },
-
-      {
-        name: "BQDCQB Lace Trim Sweater",
-        category: "Clothing",
-        url: amazon,
-        note: "",
-        image: "23.png"
-      },
-
-      {
-        name: "Coume Straight Leg Track Pants",
-        category: "Clothing",
-        url: amazon,
-        note: "3 Pack",
-        image: "31.png"
-      },
-
-      {
-        name: "Aoxjox Layered Waist Leggings",
-        category: "Clothing",
-        url: amazon,
-        note: "27-inch length",
-        image: "32.png"
-      },
-
-      {
-        name: "Cropped Top and Wide Leg Lounge Set",
-        category: "Clothing",
-        url: amazon,
-        note: "",
-        image: "33.png"
-      },
-
-      {
-        name: "ZESICA Striped Lounge Set",
-        category: "Clothing",
-        url: amazon,
-        note: "",
-        image: "32.png"
-      },
-
-      {
-        name: "Nike Studio Fleece Crew Neck",
-        category: "Clothing",
-        url: "https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-crew-neck-sweatshirt-muNdPA4Z/IM8082-001",
-        note: "",
-        image: "37.png"
-      },
-
-      {
-        name: "Nike Studio Fleece Red Crew",
-        category: "Clothing",
-        url: "https://www.academy.com/p/nike-womens-studio-fleece-mid-weight-crew-sweatshirt?sku=bright-red-01-large",
-        note: "Size Large",
-        image: "38.png"
-      },
-
-      {
-        name: "Nike Studio Fleece Oversized Crew",
-        category: "Clothing",
-        url: "https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-crew-SelEwfjI/IZ3874-259",
-        note: "",
-        image: "39.png"
-      },
-
-      {
-        name: "Nike Studio Fleece Cuffed Pants",
-        category: "Clothing",
-        url: "https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-high-rise-cuffed-pants-CX1DVLm0/IZ3889-259",
-        note: "",
-        image: "40.png"
-      },
-
-      {
-        name: "Nike Zenvy Wide Leg Pants",
-        category: "Clothing",
-        url: "https://www.nike.com/t/zenvy-womens-mid-rise-wide-leg-pants-E7tmCcqD/IV4958-010",
-        note: "",
-        image: "41.png"
-      },
-
-      {
-        name: "Nike Fleece Plush Pants",
-        category: "Clothing",
-        url: "https://www.academy.com/p/nike-womens-fleece-plush-pants?sku=mystic-dates-sail-large",
-        note: "Size Large",
-        image: "42.png"
-      },
-
-      {
-        name: "Nike Plush Cropped Quarter Zip",
-        category: "Clothing",
-        url: "https://www.academy.com/p/nike-womens-plush-oversized-crop-quarter-zip-long-sleeve-fleece-sweatshirt?sku=mystic-dates-sail-large",
-        note: "Size Large",
-        image: "43.png"
-      },
-
-
-      // =====================================
-      // SHOES
-      // =====================================
-
-      {
-        name: "Project Cloud Fuzzy Clogs",
-        category: "Shoes",
-        url: amazon,
-        note: "Genuine leather slippers",
-        image: "16.png"
-      },
-
-      {
-        name: "Coutgo Knee High Boots",
-        category: "Shoes",
-        url: amazon,
-        note: "Chunky heel",
-        image: "24.png"
-      },
-
-
-      // =====================================
-      // ACCESSORIES
-      // =====================================
-
-      {
-        name: "Snakeskin Everyday Tumbler",
-        category: "Accessories",
-        url: "https://shop.com/products/14973623796072/snakeskin-everyday-tumbler-20oz",
-        note: "20 oz",
-        image: "3.png"
-      },
-
-      {
-        name: "HydroJug Traveler",
-        category: "Accessories",
-        url: "https://www.target.com/p/hydrojug-40oz-traveler-straw-tumbler/-/A-1014533840?preselect=1011913063",
-        note: "40 oz",
-        image: "4.png"
-      },
-
-      {
-        name: "Large Soft Leather Tote Bag",
-        category: "Accessories",
-        url: amazon,
-        note: "With interior pouch",
-        image: "15.png"
-      },
-
-
-      // =====================================
-      // TECHNOLOGY
-      // =====================================
-
-      {
-        name: "Meta AI Glasses",
-        category: "Technology",
-        url: amazon,
-        note: "Adventurer",
-        image: "14.png"
-      },
-
-      {
-        name: "LaCie Rugged Portable Hard Drive",
-        category: "Technology",
-        url: amazon,
-        note: "2TB USB-C",
-        image: "20.png"
-      },
-
-
-      // =====================================
-      // CAMERA EQUIPMENT
-      // =====================================
-
-      {
-        name: "Retropia Disposable Camera Lens",
-        category: "Camera Equipment",
-        url: amazon,
-        note: "Canon RF mount",
-        image: "13.png"
-      },
-
-      {
-        name: "K&F 77mm Starburst Filter Kit",
-        category: "Camera Equipment",
-        url: amazon,
-        note: "4, 6 and 8-point filters",
-        image: "17.png"
-      },
-
-      {
-        name: "K&F 77mm UV Protection Filter",
-        category: "Camera Equipment",
-        url: amazon,
-        note: "Nano-X series",
-        image: "18.png"
-      },
-
-      {
-        name: "Zeadio Camera Video Rig Cage",
-        category: "Camera Equipment",
-        url: amazon,
-        note: "Filmmaking kit",
-        image: "19.png"
-      },
-
-      {
-        name: "DJI Osmo Mobile 8",
-        category: "Camera Equipment",
-        url: amazon,
-        note: "Phone gimbal stabilizer",
-        image: "35.png"
-      },
-
-      {
-        name: "Canon RF 200-800mm Lens",
-        category: "Camera Equipment",
-        url: amazon,
-        note: "f/6.3-9 IS USM lens bundle",
-        image: "36.png"
-      },
-
-
-      // =====================================
-      // BEAUTY
-      // =====================================
-
-      {
-        name: "DAE Cactus Fruit Styling Cream",
-        category: "Beauty",
-        url: amazon,
-        note: "Styling cream and taming wand",
-        image: "25.png"
-      },
-
-      {
-        name: "L'Occitane Hand Cream",
-        category: "Beauty",
-        url: amazon,
-        note: "",
-        image: "26.png"
-      },
-
-      {
-        name: "Summer Fridays Lip Butter Balm Set",
-        category: "Beauty",
-        url: amazon,
-        note: "Vanilla and Vanilla Beige",
-        image: "27.png"
-      },
-
-      {
-        name: "Caudalie Instant Detox Mask",
-        category: "Beauty",
-        url: amazon,
-        note: "Pink clay face mask",
-        image: "28.png"
-      },
-
-      {
-        name: "Lux Unfiltered Iced Latte Eye Patches",
-        category: "Beauty",
-        url: amazon,
-        note: "10 pairs",
-        image: "29.png"
-      },
-
-      {
-        name: "Hero Cosmetics Mighty Patch",
-        category: "Beauty",
-        url: amazon,
-        note: "75 count",
-        image: "30.png"
-      }
-
-    ];
-
-
-    // =====================================
-    // CATEGORY COLORS AND ICONS
-    // =====================================
-
-    const styles = {
-      "Clothing": ["👕", "#eee5df"],
-      "Shoes": ["👟", "#eee5e8"],
-      "Accessories": ["👜", "#e9e7df"],
-      "Technology": ["💻", "#e3e8e9"],
-      "Camera Equipment": ["📷", "#e5e5ed"],
-      "Beauty": ["🧴", "#f1e3e3"]
+  <div class="count" id="count"></div>
+
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- POPUP -->
+
+<dialog id="details">
+  <button class="close" id="closeModal" aria-label="Close">×</button>
+  <div id="modal"></div>
+</dialog>
+
+<footer>Made with ♡ · My Wishlist</footer>
+
+<script>
+
+// =====================================
+// AMAZON WISHLIST
+// =====================================
+
+const amazon = "https://www.amazon.com/hz/wishlist/ls/3C9AOAMHHSORP";
+
+// =====================================
+// ALL GIFTS
+// Format:
+// [name, category, note, image, URL]
+// =====================================
+
+const giftData = [
+
+  // CLOTHING
+
+  ["Nike Club Fleece Washed Hoodie","Clothing","Size Large","1.png","https://www.dickssportinggoods.com/p/nike-mens-club-fleece-washed-hoodie-25nikmcasumclbbbhdeaa/25nikmcasumclbbbhdeaa"],
+
+  ["UGA x Outkast So Fresh So Clean Hoodie","Clothing","Size Large · Limited release","2.png","https://classtrip.co/products/nike-x-class-trip-x-uga-x-outkast-so-fresh-so-clean-hoodie"],
+
+  ["Nike Studio Fleece Oversized Hoodie","Clothing","Size Large","5.png","https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-pullover-hoodie-BwJZvN7w/IX7043-001"],
+
+  ["Aerie Street Trouser - Style 1","Clothing","Size Large","6.png","https://www.ae.com/us/en/p/aerie/bottoms/pants/aerie-street-trouser/0701_8490_128"],
+
+  ["Aerie Street Trouser - Style 2","Clothing","Size Large","7.png","https://www.ae.com/us/en/p/aerie/bottoms/pants/aerie-street-trouser/0701_8540_572"],
+
+  ["Aerie Go-To Boyfriend Sweatshirt","Clothing","Size Large","8.png","https://www.ae.com/us/en/p/aerie/tops/sweatshirts-hoodies/aerie-go-to-boyfriend-sweatshirt/0743_4022_572"],
+
+  ["Aerie Cloud Fleece Mockneck","Clothing","Size Large","9.png","https://www.ae.com/us/en/p/aerie/tops/sweatshirts-hoodies/offline-by-aerie-cloud-fleece-oversized-mockneck-sweatshirt/2164_2169_073"],
+
+  ["Aerie Real Me Trouser","Clothing","Size Large","10.png","https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-real-me-xtra-high-waisted-trouser/0784_1093_073"],
+
+  ["Aerie Layered Leggings","Clothing","Size Large","11.png","https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-real-me-xtra-high-waisted-layered-legging/1701_6350_073"],
+
+  ["Aerie Hugger Wide Leg Pants","Clothing","Size Large","12.png","https://www.ae.com/us/en/p/aerie/bottoms/leggings-yoga-pants/offline-by-aerie-the-hugger-piping-wide-leg-pant/0784_6307_073"],
+
+  ["Alaroo Two-Piece Lounge Set","Clothing","Size Large","21.png","https://www.amazon.com/dp/B0HG9MFV24/"],
+
+  ["SUUKSESS Matching Lounge Set","Clothing","Size X-Large","22.png","https://www.amazon.com/dp/B0HDBZFXFQ/"],
+
+  ["BQDCQB Lace Trim Sweater","Clothing","","23.png",amazon],
+
+  ["Coume Straight Leg Track Pants","Clothing","Size Large","31.png","https://www.amazon.com/dp/B0GL8CG1ZR/"],
+
+  ["Aoxjox Layered Waist Leggings","Clothing","27-inch length","32.png",amazon],
+
+  ["Cropped Top and Wide Leg Lounge Set","Clothing","Size Large","33.png","https://www.amazon.com/dp/B0HFBBRRXK/"],
+
+  ["ZESICA Striped Lounge Set","Clothing","Size Large","34.png","https://www.amazon.com/dp/B0HJ2G3GQS/"],
+
+  ["Nike Studio Fleece Crew Neck","Clothing","Size Large","37.png","https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-crew-neck-sweatshirt-muNdPA4Z/IM8082-001"],
+
+  ["Nike Studio Fleece Red Crew","Clothing","Size Large","38.png","https://www.academy.com/p/nike-womens-studio-fleece-mid-weight-crew-sweatshirt?sku=bright-red-01-large"],
+
+  ["Nike Studio Fleece Oversized Crew","Clothing","Size Large","39.png","https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-crew-SelEwfjI/IZ3874-259"],
+
+  ["Nike Studio Fleece Cuffed Pants","Clothing","Size Large","40.png","https://www.nike.com/t/studio-fleece-medium-weight-womens-oversized-high-rise-cuffed-pants-CX1DVLm0/IZ3889-259"],
+
+  ["Nike Zenvy Wide Leg Pants","Clothing","Size Large","41.png","https://www.nike.com/t/zenvy-womens-mid-rise-wide-leg-pants-E7tmCcqD/IV4958-010"],
+
+  ["Nike Fleece Plush Pants","Clothing","Size Large","42.png","https://www.academy.com/p/nike-womens-fleece-plush-pants?sku=mystic-dates-sail-large"],
+
+  ["Nike Plush Cropped Quarter Zip","Clothing","Size Large","43.png","https://www.academy.com/p/nike-womens-plush-oversized-crop-quarter-zip-long-sleeve-fleece-sweatshirt?sku=mystic-dates-sail-large"],
+
+  ["Polka Dot Lounge Pants Sets","Clothing","Size Large","51.png","https://www.amazon.com/gp/product/B0HJZ4XV6D/"],
+
+  ["Sampeel Two Piece Set","Clothing","Size Large","58.png","https://www.amazon.com/gp/product/B0HKMCZBMP/"],
+
+  ["Sampeel Womens Long Sleeve Top","Clothing","Size Large","59.png","https://www.amazon.com/gp/product/B0GZBPY3NF/"],
+
+  ["Sampeel Womens Long Sleeve Top - Additional Color","Clothing","Size Large","60.png","https://www.amazon.com/gp/product/B0GZBPY3NF/"],
+
+  ["Womens Lightweight Cropped Puffer","Clothing","Size Medium","61.png","https://www.amazon.com/gp/product/B0CJRN91FY/"],
+
+  ["Aoxjox Seamless Camo Leggings","Clothing","Size Large","62.png","https://www.amazon.com/gp/product/B0DRG77X56/"],
+
+  ["Womens Baggy Barrel Pants","Clothing","Size Large","63.png","https://www.amazon.com/gp/product/B0FR4464RY/"],
+
+  // SHOES
+
+  ["Project Cloud Fuzzy Clogs","Shoes","Genuine leather slippers","16.png",amazon],
+
+  ["Coutgo Knee High Boots","Shoes","Size 10","24.png","https://www.amazon.com/dp/B0H2HPD375/"],
+
+  ["Leather Slip-On Womens Clogs","Shoes","Size 10","16.png","https://www.amazon.com/gp/product/B0GWRR12MM/"],
+
+  // ACCESSORIES
+
+  ["Snakeskin Everyday Tumbler","Accessories","20 oz","3.png","https://shop.com/products/14973623796072/snakeskin-everyday-tumbler-20oz"],
+
+  ["HydroJug Traveler","Accessories","40 oz","4.png","https://www.target.com/p/hydrojug-40oz-traveler-straw-tumbler/-/A-1014533840?preselect=1011913063"],
+
+  ["Large Soft Leather Tote Bag","Accessories","With interior pouch","15.png",amazon],
+
+  ["Stanley Lunch Box","Accessories","White","46.png","https://www.amazon.com/dp/B0CZ5NZSKN/"],
+
+  ["Gold Hoop Earrings","Accessories","Gold","44.png","https://www.amazon.com/dp/B0D172FC5V/"],
+
+  ["HydroJug Traveler - Additional Color","Accessories","40 oz","52.png","https://www.amazon.com/gp/product/B0H2G7R7BR/"],
+
+  ["Chunky Statement Gold Hammered Cross","Accessories","Cross and brown beads","54.png","https://www.amazon.com/gp/product/B0D872YBF4/"],
+
+  ["Tewiky Layered Necklaces","Accessories","Layered","55.png","https://www.amazon.com/gp/product/B0F2M4CNWH/"],
+
+  ["Chain Earrings","Accessories","Dots","56.png","https://www.amazon.com/gp/product/B08MSY5FXC/"],
+
+  ["Gold Bracelets","Accessories","","57.png","https://www.amazon.com/gp/product/B0C2P72WY6/"],
+
+  // TECHNOLOGY
+
+  ["Meta AI Glasses","Technology","Adventurer","14.png",amazon],
+
+  ["Meta AI Glasses - Scriber","Technology","Gen 2","45.png","https://www.meta.com/ai-glasses/ray-ban-meta-scriber-havana-clear-gen-2/"],
+
+  ["LaCie Rugged Portable Hard Drive","Technology","2TB USB-C","20.png","https://www.amazon.com/dp/B01N7QFZLQ/"],
+
+  // CAMERA EQUIPMENT
+
+  ["Retropia Disposable Camera Lens","Camera Equipment","Canon RF mount","13.png",amazon],
+
+  ["K&F 77mm Starburst Filter Kit","Camera Equipment","4, 6 and 8-point filters","17.png",amazon],
+
+  ["K&F 77mm UV Protection Filter","Camera Equipment","Nano-X series","18.png",amazon],
+
+  ["Zeadio Camera Video Rig Cage","Camera Equipment","Filmmaking kit","19.png",amazon],
+
+  ["DJI Osmo Mobile 8","Camera Equipment","Phone gimbal stabilizer","35.png",amazon],
+
+  ["Canon RF 200-800mm Lens","Camera Equipment","f/6.3-9 IS USM lens bundle","36.png",amazon],
+
+  ["Camera Backpack","Camera Equipment","35L-45L","53.png","https://www.amazon.com/gp/product/B0BN5VZYT4/"],
+
+  // BEAUTY
+
+  ["DAE Cactus Fruit Styling Cream","Beauty","Styling cream and taming wand","25.png",amazon],
+
+  ["L'Occitane Hand Cream","Beauty","","26.png",amazon],
+
+  ["Summer Fridays Lip Butter Balm Set","Beauty","Vanilla and Vanilla Beige","27.png",amazon],
+
+  ["Caudalie Instant Detox Mask","Beauty","Pink clay face mask","28.png",amazon],
+
+  ["Lux Unfiltered Iced Latte Eye Patches","Beauty","10 pairs","29.png",amazon],
+
+  ["Hero Cosmetics Mighty Patch","Beauty","75 count","30.png",amazon],
+
+  // GIFT CARDS
+
+  ["Kroger Gift Card","Gift Cards","Any amount","47.png","https://www.kroger.com/gift-cards"],
+
+  ["Target Gift Card","Gift Cards","Any amount","50.png","https://www.target.com/c/gift-cards/-/N-5xsxu"],
+
+  ["Walmart Gift Card","Gift Cards","Any amount","48.png","https://www.walmart.com/cp/gift-cards/96894"],
+
+  ["Visa Gift Card","Gift Cards","Any amount","49.png","https://www.vanillagift.com/"]
+
+];
+
+// Convert gift entries into objects
+const products = giftData.map(gift => ({
+  name: gift[0],
+  category: gift[1],
+  note: gift[2],
+  image: gift[3],
+  url: gift[4]
+}));
+
+// =====================================
+// CATEGORY COLORS
+// =====================================
+
+const styles = {
+  "Clothing": ["👕", "#eee5df"],
+  "Shoes": ["👟", "#eee5e8"],
+  "Accessories": ["👜", "#e9e7df"],
+  "Technology": ["💻", "#e3e8e9"],
+  "Camera Equipment": ["📷", "#e5e5ed"],
+  "Beauty": ["🧴", "#f1e3e3"],
+  "Gift Cards": ["🎁", "#eee6dc"]
+};
+
+const categories = [
+  "All",
+  "Clothing",
+  "Shoes",
+  "Accessories",
+  "Technology",
+  "Camera Equipment",
+  "Beauty",
+  "Gift Cards"
+];
+
+let selectedCategory = "All";
+
+const grid = document.getElementById("grid");
+const filters = document.getElementById("filters");
+const details = document.getElementById("details");
+
+// =====================================
+// CREATE FILTER BUTTONS
+// =====================================
+
+function makeFilters() {
+  filters.innerHTML = "";
+
+  categories.forEach(category => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className =
+      "filter" + (selectedCategory === category ? " active" : "");
+
+    button.textContent = category;
+
+    button.onclick = () => {
+      selectedCategory = category;
+      makeFilters();
+      render();
     };
 
-
-    // =====================================
-    // CATEGORY ORDER
-    // =====================================
-
-    const categories = [
-      "All",
-      "Clothing",
-      "Shoes",
-      "Accessories",
-      "Technology",
-      "Camera Equipment",
-      "Beauty"
-    ];
-
-
-    // =====================================
-    // VARIABLES
-    // =====================================
-
-    let selectedCategory = "All";
-
-    const grid = document.getElementById("grid");
-    const filters = document.getElementById("filters");
-    const details = document.getElementById("details");
-
-
-    // =====================================
-    // CREATE FILTER BUTTONS
-    // =====================================
-
-    function makeFilters() {
-
-      filters.innerHTML = "";
-
-      categories.forEach(category => {
-
-        const button = document.createElement("button");
-
-        button.type = "button";
-
-        button.className =
-          "filter" +
-          (selectedCategory === category ? " active" : "");
-
-        button.textContent = category;
-
-        button.onclick = () => {
-
-          selectedCategory = category;
-
-          makeFilters();
-
-          render();
-
-        };
-
-        filters.appendChild(button);
-
-      });
-
-    }
-
-
-    // =====================================
-    // CREATE PRODUCT IMAGE OR ICON
-    // =====================================
-
-    function createProductVisual(product, forModal = false) {
-
-      const [icon] = styles[product.category];
-
-      if (product.image && product.image.trim() !== "") {
-
-        const img = document.createElement("img");
-
-        img.src = product.image;
-        img.alt = product.name;
-
-        img.className = forModal
-          ? "modal-image"
-          : "product-image";
-
-        img.loading = forModal ? "eager" : "lazy";
-
-        img.onerror = () => {
-
-          const fallback = document.createElement("div");
-
-          fallback.className = forModal
-            ? "modal-icon"
-            : "symbol";
-
-          fallback.textContent = icon;
-
-          img.replaceWith(fallback);
-
-        };
-
-        return img;
-
-      }
-
-      const symbol = document.createElement("div");
-
-      symbol.className = forModal
-        ? "modal-icon"
-        : "symbol";
-
-      symbol.textContent = icon;
-
-      return symbol;
-
-    }
-
-
-    // =====================================
-    // DISPLAY PRODUCTS
-    // =====================================
-
-    function render() {
-
-      grid.innerHTML = "";
-
-      const visible = products.filter(product => {
-
-        return (
-          selectedCategory === "All" ||
-          product.category === selectedCategory
-        );
-
-      });
-
-      document.getElementById("count").textContent =
-        `Showing ${visible.length} of ${products.length} items`;
-
-      if (visible.length === 0) {
-
-        const empty = document.createElement("div");
-
-        empty.className = "empty";
-        empty.textContent = "No products found.";
-
-        grid.appendChild(empty);
-
-        return;
-
-      }
-
-      visible.forEach(product => {
-
-        const [icon, color] = styles[product.category];
-
-        // Product card
-
-        const item = document.createElement("article");
-        item.className = "item";
-
-        // Clickable square
-
-        const square = document.createElement("button");
-
-        square.type = "button";
-        square.className = "square";
-        square.style.background = color;
-
-        square.setAttribute(
-          "aria-label",
-          "View details for " + product.name
-        );
-
-        // Product image
-
-        square.appendChild(
-          createProductVisual(product)
-        );
-
-        // Category label when no image is provided
-
-        if (!product.image) {
-
-          const label = document.createElement("span");
-
-          label.className = "square-label";
-          label.textContent = product.category;
-
-          square.appendChild(label);
-
-        }
-
-        square.onclick = () => showDetails(product);
-
-        // Information underneath
-
-        const info = document.createElement("div");
-        info.className = "info";
-
-        const categoryLabel = document.createElement("div");
-
-        categoryLabel.className = "category";
-        categoryLabel.textContent = product.category;
-
-        const title = document.createElement("div");
-
-        title.className = "name";
-        title.textContent = product.name;
-
-        const note = document.createElement("div");
-
-        note.className = "note";
-        note.textContent = product.note || "";
-
-        // Shopping link
-
-        const link = document.createElement("a");
-
-        link.className = "shop";
-        link.href = product.url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-
-        const store = new URL(product.url)
-          .hostname.replace("www.", "");
-
-        link.textContent = "Shop at " + store + " ↗";
-
-        info.append(
-          categoryLabel,
-          title,
-          note,
-          link
-        );
-
-        item.append(square, info);
-
-        grid.appendChild(item);
-
-      });
-
-    }
-
-
-    // =====================================
-    // PRODUCT DETAILS POPUP
-    // =====================================
-
-    function showDetails(product) {
-
-      const modal = document.getElementById("modal");
-
-      modal.innerHTML = "";
-
-      const visual = createProductVisual(product, true);
-
-      const title = document.createElement("h2");
-      title.textContent = product.name;
-
-      const categoryText = document.createElement("p");
-      categoryText.textContent = product.category;
-
-      const noteText = document.createElement("p");
-
-      noteText.textContent =
-        product.note || "View the original product listing.";
-
-      const link = document.createElement("a");
-
-      link.className = "modal-link";
-      link.href = product.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = "View Product ↗";
-
-      modal.append(
-        visual,
-        title,
-        categoryText,
-        noteText,
-        link
-      );
-
-      details.showModal();
-
-    }
-
-
-    // =====================================
-    // CLOSE POPUP
-    // =====================================
-
-    document.getElementById("closeModal").onclick = () => {
-
-      details.close();
-
+    filters.appendChild(button);
+  });
+}
+
+// =====================================
+// CREATE PRODUCT IMAGE
+// =====================================
+
+function createProductVisual(product, forModal = false) {
+  const [icon] = styles[product.category];
+
+  if (product.image) {
+    const img = document.createElement("img");
+
+    img.src = product.image;
+    img.alt = product.name;
+    img.className = forModal ? "modal-image" : "product-image";
+    img.loading = forModal ? "eager" : "lazy";
+
+    img.onerror = () => {
+      const fallback = document.createElement("div");
+      fallback.className = forModal ? "modal-icon" : "symbol";
+      fallback.textContent = icon;
+      img.replaceWith(fallback);
     };
 
-    details.addEventListener("click", event => {
+    return img;
+  }
 
-      if (event.target === details) {
+  const fallback = document.createElement("div");
+  fallback.className = forModal ? "modal-icon" : "symbol";
+  fallback.textContent = icon;
+  return fallback;
+}
 
-        details.close();
+// =====================================
+// DISPLAY PRODUCTS
+// =====================================
 
-      }
+function render() {
+  grid.innerHTML = "";
 
-    });
+  const visible = products.filter(product =>
+    selectedCategory === "All" ||
+    product.category === selectedCategory
+  );
 
+  document.getElementById("count").textContent =
+    `Showing ${visible.length} of ${products.length} items`;
 
-    // =====================================
-    // START WEBSITE
-    // =====================================
+  if (visible.length === 0) {
+    grid.innerHTML = '<div class="empty">No products found.</div>';
+    return;
+  }
 
-    makeFilters();
+  visible.forEach(product => {
+    const [, color] = styles[product.category];
 
-    render();
+    const item = document.createElement("article");
+    item.className = "item";
 
-  </script>
+    const square = document.createElement("button");
+    square.type = "button";
+    square.className = "square";
+    square.style.background = color;
+    square.setAttribute("aria-label", "View details for " + product.name);
 
+    square.appendChild(createProductVisual(product));
+    square.onclick = () => showDetails(product);
+
+    const info = document.createElement("div");
+    info.className = "info";
+
+    const categoryLabel = document.createElement("div");
+    categoryLabel.className = "category";
+    categoryLabel.textContent = product.category;
+
+    const title = document.createElement("div");
+    title.className = "name";
+    title.textContent = product.name;
+
+    const note = document.createElement("div");
+    note.className = "note";
+    note.textContent = product.note || "";
+
+    const link = document.createElement("a");
+    link.className = "shop";
+    link.href = product.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+
+    let store = "View Product";
+
+    try {
+      store = new URL(product.url).hostname.replace("www.", "");
+    } catch (error) {
+      // Keep the fallback label if the URL is invalid.
+    }
+
+    link.textContent = "Shop at " + store + " ↗";
+
+    info.append(categoryLabel, title, note, link);
+    item.append(square, info);
+    grid.appendChild(item);
+  });
+}
+
+// =====================================
+// PRODUCT POPUP
+// =====================================
+
+function showDetails(product) {
+  const modal = document.getElementById("modal");
+  modal.innerHTML = "";
+
+  const visual = createProductVisual(product, true);
+
+  const title = document.createElement("h2");
+  title.textContent = product.name;
+
+  const categoryText = document.createElement("p");
+  categoryText.textContent = product.category;
+
+  const noteText = document.createElement("p");
+  noteText.textContent =
+    product.note || "View the original product listing.";
+
+  const link = document.createElement("a");
+  link.className = "modal-link";
+  link.href = product.url;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = "View Product ↗";
+
+  modal.append(visual, title, categoryText, noteText, link);
+  details.showModal();
+}
+
+// =====================================
+// CLOSE POPUP
+// =====================================
+
+document.getElementById("closeModal").onclick = () => {
+  details.close();
+};
+
+details.addEventListener("click", event => {
+  if (event.target === details) {
+    details.close();
+  }
+});
+
+// =====================================
+// START WEBSITE
+// =====================================
+
+makeFilters();
+render();
+
+</script>
 </body>
 </html>
